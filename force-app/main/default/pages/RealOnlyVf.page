@@ -1,0 +1,45 @@
+<apex:page controller="RealOnlyApex">
+
+    <script src="/soap/ajax/20.0/connection.js"></script>
+    <script src="/soap/ajax/20.0/apex.js"></script> 
+    <div id="totalAccounts"></div> 
+    <script>
+    //sforce.connection.sessionId = '{!$Api.Session_ID}';
+    var records = [];
+    function apexCaller(varOffSet, totalRecords) {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.RealOnlyApex.getRecords}',
+            varOffSet,
+            function(result){
+                if(result && result.length > 0) {
+                    records = records.concat(result);
+                    console.log('Total Records: '+records.length);
+                    publishMC(JSON.stringify(result));
+                    if(records.length < totalRecords) {
+                        apexCaller(result[result.length - 1].Sequence__c, totalRecords);
+                    }
+                }
+            }
+        );
+    }
+    
+    apexCaller(0, 80000);
+    
+    // Load the MessageChannel token in a variable
+    var SAMPLEMC = "{!$MessageChannel.demoChannel__c}";
+    var subscriptionToMC;
+    
+    function publishMC(records) {
+        const message = {
+            messageToSend: records,
+            sourceSystem: "From VisualForce Page"
+        };
+        sforce.one.publish(SAMPLEMC, message);
+    }
+    
+    </script>
+    <div>
+        VF to fetch Data
+    </div>
+
+</apex:page>

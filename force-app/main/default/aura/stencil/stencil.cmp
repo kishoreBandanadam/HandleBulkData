@@ -1,0 +1,41 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="opacities" type="Integer[]" default="[1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3]"/>
+    <aura:attribute name="columns" type="Integer[]" default="[1,2,3]"/>
+    <aura:attribute name="double" type="Boolean" default="true"/>
+    
+    <aura:if isTrue="{!v.double}">
+    <!--table class="table slds-table slds-table_bordered slds-no-row-hover slds-table_col-bordered"-->
+    <table class="table slds-table slds-table_bordered slds-no-row-hover">
+        <tbody class="tbody">
+            <aura:iteration items="{! v.opacities }" var="opacity">
+                <tr style="{! 'opacity: ' + opacity }"> 
+                    <aura:iteration items="{! v.columns }" var="col">
+                        <td class="stencil">
+                            <div></div>
+                            <div class="row"></div>
+                        </td>
+                    </aura:iteration>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+    </aura:if>
+    
+    <aura:if isTrue="{! !v.double}">
+        <!--table class="table slds-table slds-table_bordered slds-no-row-hover slds-table_col-bordered" for coulmn border left right-->
+        <table class="table slds-table slds-table_bordered slds-no-row-hover">
+            <tbody class="tbody">
+                <aura:iteration items="{! v.opacities }" var="opacity">
+                    <tr style="{! 'opacity: ' + opacity }"> 
+                        <aura:iteration items="{! v.columns }" var="col">
+                            <td class="stencil">
+                                <div class="row"></div>
+                            </td>
+                        </aura:iteration>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </aura:if>
+    
+</aura:component>

@@ -1,0 +1,86 @@
+<aura:component controller="RealOnlyApex" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <!-- attributes -->
+    <aura:attribute name="receivedRecords" type="Object"/>
+    <aura:attribute name="copyOfData" type="String"/>
+    <aura:attribute name="hasReceivedData" type="Boolean" default="false"/>
+    <aura:attribute name="queryCompleted" type="Boolean" default="false"/>
+    <aura:attribute name="loadChild" type="Boolean" default="false"/>
+    <aura:attribute name="loadDataFromLightning" type="Boolean" default="true"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="columnCopy" type="List"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true"/>
+    <aura:attribute name="onLoadMoreStatus" type="String"/>
+    <aura:attribute name="rowsToLoad" type="Integer" default="200"/>
+    <aura:attribute name="paginatedList" type="Object"/>
+    <aura:attribute name="noOfFilteredRows" type="Integer"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer"/>
+    <aura:attribute name="totalRowsToQuery" type="Integer" default="80000"/>
+    <aura:attribute name="totalQueryRowsReturned" type="Integer" default=""/>
+    <aura:attribute name="stencilColumns" type="Integer[]" default="[1,2,3,4]"/>
+    <aura:attribute name="sortedBy" type="String"/>
+    <aura:attribute name="sortedDirection" type="String"/>    
+    
+    <!-- Message Channel 
+    <lightning:messageChannel type="demoChannel__c" aura:id="sampleMessageChannel" onMessage="{!c.messageReceived}" scope="APPLICATION"/>
+    -->
+    
+    <!-- handlers-->
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:handler name="sendFilteredData" event="c:sendFilteredData" action="{!c.handleSendFilteredDataEvent}"/>
+    
+    <aura:if isTrue="{!v.loadChild}">
+        <lightning:layout>
+            <lightning:layoutItem flexibility="auto" padding="around-small">
+                <c:DynamicFilter  disabled="{! !v.queryCompleted}" options="{!v.columnCopy}" rawDataRows="{!v.copyOfData}" />
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto, no-grow" padding="around-small">
+                <div class="slds-box slds-text-heading_small">
+                    <ul class="slds-list_horizontal">
+                        <li>Showing Results:</li> <li class="highlight">{!v.totalNumberOfRows}</li>
+                    </ul>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto, no-grow " padding="around-small">
+                <div class="slds-box slds-text-heading_small">
+                    <ul class="slds-list_horizontal">
+                        <li>Total No of Row Queried:</li> <li class="highlight">{!v.totalQueryRowsReturned}</li>
+                    </ul>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto, no-grow " padding="around-small">
+                <div class="slds-box slds-text-heading_small">
+                    <ul class="slds-list_horizontal">
+                        <li>Filtered Rows:</li> <li class="highlight">{!v.noOfFilteredRows}</li>
+                    </ul>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </aura:if>
+    
+    <lightning:card title="" class="tableCard">
+        
+        <!-- Stencil -->
+        <aura:if isTrue="{! !v.hasReceivedData}">
+            <c:stencil columns="{!v.stencilColumns}"/>
+        </aura:if>
+        
+        <!-- Data Rows -->
+        <aura:if isTrue="{!v.hasReceivedData}">
+            <div style="height: 500px">
+                <lightning:datatable columns="{! v.columns }"
+                                     data="{! v.paginatedList }"
+                                     keyField="id"
+                                     hideCheckboxColumn="true"
+                                     enableInfiniteLoading="{!v.enableInfiniteLoading}"
+                                     loadMoreOffset="10"
+                                     onloadmore="{! c.loadMoreData }"
+                                     sortedBy="{!v.sortedBy}"
+                                     sortedDirection="{!v.sortedDirection}"
+                                     onsort="{!c.handleSort}"/>
+                {!v.onLoadMoreStatus}
+            </div>
+        </aura:if>
+    </lightning:card>
+    
+</aura:component>

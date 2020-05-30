@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" description="Send filtered data from DynamicFilter to BulkDataDisplay component">
+	<aura:attribute name="varEventFilteredData" type="List"/>
+    <aura:attribute name="search" type="Boolean" default="false"/>
+    <aura:attribute name="reset" type="Boolean" default="false"/>
+    <aura:attribute name="triggered" type="Boolean" default="false"/>
+</aura:event>

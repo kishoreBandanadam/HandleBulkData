@@ -1,0 +1,99 @@
+<aura:component extensible="true" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    
+    
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    
+    <!-- Filter Metadata -->
+    <aura:attribute name="options" type="List" description="comes from parent"/>
+    <aura:attribute name="filters" type="List" default=""/>
+    
+    <!-- Filter Metadata data-->
+    <aura:attribute name="selectedType" type="String" default="text"/>
+    <aura:attribute name="selectedFilter" type="String" default="text"/>
+    
+    <!-- Filter Data -->
+    <aura:attribute name="fieldName" type="String"/>
+    <aura:attribute name="filter" type="String"/>
+    <aura:attribute name="filterValue" type="String"/>
+    <aura:attribute name="disabled" type="Boolean" default="true"/>
+    
+    <!-- Actual Data-->
+    <aura:attribute name="rawDataRows" type="Object"/>
+    <aura:attribute name="filteredData" type="List"/>
+    
+    <!-- Events -->
+    <aura:registerEvent name="sendFilteredData" type="c:sendFilteredData"/>
+
+    
+        <lightning:layout>
+            <lightning:layoutItem flexibility="auto" padding="around-small">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <div class="slds-combobox-group">
+                            <div class="slds-combobox_object-switcher slds-combobox-addon_start">
+                                <lightning:combobox name="progress" 
+                                                    label="" 
+                                                    value=""
+                                                    disabled="{!v.disabled}"
+                                                    variant="label-hidden"
+                                                    placeholder="Field" 
+                                                    options="{! v.options }" 
+                                                    onchange="{! c.handleChange }"/>
+                            </div>
+                            <div class="slds-combobox_object-switcher slds-combobox-addon_end">
+                                <lightning:combobox name="progress" 
+                                                    label="" 
+                                                    value="{!v.filter}"
+                                                    disabled="{!v.disabled}"
+                                                    variant="label-hidden"
+                                                    placeholder="Filter" 
+                                                    options="{! v.filters }" 
+                                                    onchange="{! c.handleFilterChange }"/>
+                            </div>
+                            <div class="slds-combobox_container slds-combobox-addon_end" role="group">
+                                
+                                <aura:if isTrue="{!v.selectedType == 'text'}">
+                                    <lightning:input aura:id="enter-search"
+                                                     class="slds-combobox-addon_start slds-combobox__input"
+                                                     name="enter-search"
+                                                     label=""
+                                                     disabled="{!v.disabled}"
+                                                     variant="label-hidden"
+                                                     value="{!v.filterValue}"
+                                                     isLoading="{! v.issearching }"
+                                                     type="search"
+                                                     />
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedType == 'date'}">
+                                    <lightning:input class="slds-combobox-addon_start slds-combobox__input" 
+                                                     type="date" 
+                                                     variant="label-hidden"
+                                                     disabled="{!v.disabled}"
+                                                     name="input1" 
+                                                     value="{!v.filterValue}"
+                                                     label="" />
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedType == 'datetime'}">
+                                    <lightning:input type="datetime" 
+                                                     variant="label-hidden"
+                                                     disabled="{!v.disabled}"
+                                                     class="slds-combobox-addon_start slds-combobox__input" 
+                                                     name="input1" 
+                                                     value="{!v.filterValue}"
+                                                     label="" />
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto, no-grow" padding="around-small">
+                <lightning:buttonIcon iconName="utility:search" disabled="{!v.disabled}" variant="brand" onclick="{!c.search}" alternativeText="search" title="search" />
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto, no-grow" padding="around-small">
+                <lightning:buttonIcon iconName="utility:close" disabled="{!v.disabled}" variant="brand" onclick="{!c.reset}" alternativeText="reset" title="reset" />
+            </lightning:layoutItem>
+        </lightning:layout>
+    
+</aura:component>

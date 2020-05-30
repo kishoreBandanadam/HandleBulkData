@@ -1,0 +1,35 @@
+<apex:page controller="RealOnlyApex">
+<apex:slds />
+    <script src="/soap/ajax/20.0/connection.js"></script>
+    <script src="/soap/ajax/20.0/apex.js"></script> 
+    <div id="totalAccounts"></div> 
+    <script>
+    //sforce.connection.sessionId = '{!$Api.Session_ID}';
+    var records;
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.RealOnlyApex.getAuraRecords}',
+        function(result){
+            console.log('Total Records: '+JSON.stringify(result));            
+            console.log('Total Records: '+result.length);  
+            records = JSON.stringify(result);
+            publishMC();
+        }
+    );
+    
+    // Load the MessageChannel token in a variable
+    var SAMPLEMC = "{!$MessageChannel.demoChannel__c}";
+    var subscriptionToMC;
+    
+    function publishMC() {
+        const message = {
+            messageToSend: records,
+            sourceSystem: "From VisualForce Page"
+        };
+        sforce.one.publish(SAMPLEMC, message);
+    }
+    
+    </script>
+    <div>
+        VF to fetch Data
+    </div>
+</apex:page>

@@ -1,0 +1,26 @@
+.THIS td.stencil {
+    /*border-left: 1px solid lightgray;*/
+}
+
+.THIS td.stencil div {
+    height: 8px;
+    margin-left: 12.5% !important;
+    margin: 13px;
+    border-radius: 1rem;
+    background: rgb(224, 229, 238);
+    width: 30%;
+}
+
+.THIS td.stencil div.row {
+    height: 8px;
+    margin-left: 12.5% !important;
+    margin: 13px;
+    border-radius: 1rem;
+    background: rgb(224, 229, 238);
+    width: 75%;
+}
+
+.THIS table .table {
+    padding: 0px !important;
+    border: none !important;
+}
